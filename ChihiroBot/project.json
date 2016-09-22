@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0-*",
+  "description": "ChihiroBot",
+  "authors": [ "Risk" ],
+  "packOptions": {
+    "tags": [ "discord", "discordapp" ],
+    "projectUrl": "https://github.com/RiskCC/ChihiroBot",
+    "licenseUrl": "http://opensource.org/licenses/MIT",
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/RiskCC/ChihiroBot"
+    },
+    "files": {
+      "exclude": [ "config" ]
+    }
+  },
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Discord.Net": "0.9.5",
+    "Discord.Net.Audio": "0.9.4",
+    "Discord.Net.Commands": "0.9.5",
+    "Discord.Net.Modules": "0.9.5",
+    "TweetinviAPI": "1.1.0"
+  },
+
+  "commands": {
+    "ChihiroBot": "ChihiroBot"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Net.Http": "4.0.0.0",
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0"
+      },
+      "dependencies": {
+        "NAudio": "1.7.3"
+      }
+    }
+  }
+}
