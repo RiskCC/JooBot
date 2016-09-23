@@ -133,11 +133,11 @@ namespace ChihiroBot.Modules.Border
             {
                 if (String.Equals(account, "sifen_trackbot"))
                 {
-                    await e.Channel.SendMessage($"Remaining: {tm.GetTimer("sifen", "event")}\n{lastTweet.ToString()}");
+                    await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifen")}\n{lastTweet.ToString()}");
                 }
                 else if (String.Equals(account, "sifjp_trackbot"))
                 {
-                    await e.Channel.SendMessage($"Remaining: {tm.GetTimer("sifjp", "event")}\n{lastTweet.ToString()}");
+                    await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifjp")}\n{lastTweet.ToString()}");
                 }
                 else
                 {
@@ -160,7 +160,7 @@ namespace ChihiroBot.Modules.Border
             d = new int[] { 0, Int32.Parse(a[1]) - Int32.Parse(b[1]), Int32.Parse(a[2]) - Int32.Parse(b[2]), Int32.Parse(a[3]) - Int32.Parse(b[3]), Int32.Parse(a[4]) - Int32.Parse(b[4]), Int32.Parse(a[5]) - Int32.Parse(b[5]) };
             elapsed = DateTime.Parse(a[0]) - DateTime.Parse(b[0]);
 
-            args = new object[] { a[0], a[1], a[2], a[3], a[4], a[5], d[1], d[2], d[3], d[4], d[5], elapsed.TotalMinutes, tm.GetTimer("ss", "event") };
+            args = new object[] { a[0], a[1], a[2], a[3], a[4], a[5], d[1], d[2], d[3], d[4], d[5], elapsed.TotalMinutes, tm.GetStarlightTimeRemaining("event") };
 
             result = String.Format("Remaining: {12}\nLast Updated: {0} JST (+{11} min)\nT1: {1} (+{6})\nT2: {2} (+{7})\nT3: {3} (+{8})\nT4: {4} (+{9})\nT5: {5} (+{10})", args);
             await e.Channel.SendMessage($"{result}");
