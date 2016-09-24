@@ -155,7 +155,7 @@ namespace ChihiroBot.Modules.Twitch
                                 {
                                     try
                                     {
-                                        var content = await _http.Send(HttpMethod.Get, $"https://api.twitch.tv/kraken/streams/{twitchStream.Key}");
+                                        var content = await _http.Send(HttpMethod.Get, $"https://api.twitch.tv/kraken/streams/{twitchStream.Key}?client_id=67w6z9i09xv2uoojdm9l0wsyph4hxo6");
                                         var response = await content.ReadAsStringAsync();
                                         JToken json = JsonConvert.DeserializeObject(response) as JToken;
 

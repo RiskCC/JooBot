@@ -33,8 +33,8 @@ namespace ChihiroBot
             where T : class
         {
             HttpRequestMessage msg = new HttpRequestMessage(method, path);
-            if (path.Contains("api.twitch.tv"))
-                msg.Headers.Add("Client-ID", RemBotClientID);
+            //if (path.Contains("api.twitch.tv"))
+            //    msg.Headers.Add("Client-ID", RemBotClientID);
             if (authToken != null)
                 msg.Headers.Authorization = new AuthenticationHeaderValue("Basic", authToken);
             if (payload != null)
