@@ -96,7 +96,7 @@ namespace ChihiroBot.Modules.StarlightStage
                        .Description("Alternate method to call border ss")
                        .Do(e =>
                        {
-                           return bm.GetBorderSS(e, "");
+                           bm.GetLastBorderTweet(e, BorderModule.deresute_border);
                        });
                 group.CreateCommand("timer")
                        .Description("Alternate method to call timer ss")

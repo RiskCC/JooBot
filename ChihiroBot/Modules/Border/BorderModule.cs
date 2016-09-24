@@ -19,20 +19,32 @@ namespace ChihiroBot.Modules.Border
         private ModuleManager _manager;
         private DiscordClient _client;
         private TimerModule tm = new TimerModule();
+        private List<Keys> keys = new List<Keys>();
 
+        private static string filePath2 = "./config/tweetinvi.json";
+        public const string sifen_border = "sifen_trackbot";
+        public const string sifjp_border = "sifjp_trackbot";
+        public const string deresute_border = "deresute_border";
+        private static string helpMessage = $"Usage: border <game>\nss - Starlight Stage\nsifen - School Idol Festival English\nsifjp - School Idol Festival Japanese";
+
+        #region Obsolete Fields
+        [Obsolete]
         private string ssCsv = "http://deresuteborder.web.fc2.com/csv/event_latest.csv";
         [Obsolete]
         private string sifenCsv = "https://docs.google.com/spreadsheets/d/1a2ihrwVgyZnjy3OjqKYsFyJLxECXBO5WrPkEK1WEivw/export?format=csv&id=1a2ihrwVgyZnjy3OjqKYsFyJLxECXBO5WrPkEK1WEivw&gid=2089803644";
         [Obsolete]
         private string sifjpCsv = "http://llborder.web.fc2.com/summary.csv";
-
-        private static string filePath2 = "./config/tweetinvi.json";
-        private List<Keys> keys = new List<Keys>();
+        [Obsolete]
         private string result, csv, current, previous;
+        [Obsolete]
         private string[] splitCsv, a, b;
+        [Obsolete]
         private int[] d;
+        [Obsolete]
         private object[] args;
+        [Obsolete]
         private TimeSpan elapsed;
+        #endregion
 
         void IModule.Install(ModuleManager manager)
         {
@@ -47,39 +59,31 @@ namespace ChihiroBot.Modules.Border
                        .Description("Returns the usage for Border module.")
                        .Do(e =>
                        {
-                           return _client.Reply(e,
-                               $"Usage: border <game>\n" +
-                               "ss - Starlight Stage\n" +
-                               "sifen - School Idol Festival English\n" +
-                               "sifjp - School Idol Festival Japanese");
+                           return _client.Reply(e, helpMessage);
                        });
                 group.CreateCommand("help")
                        .Description("Returns the usage for Border module.")
                        .Do(e =>
                        {
-                           return _client.Reply(e,
-                               $"Usage: border <game>\n" +
-                               "ss - Starlight Stage\n" +
-                               "sifen - School Idol Festival English\n" +
-                               "sifjp - School Idol Festival Japanese");
+                           return _client.Reply(e, helpMessage);
                        });
                 group.CreateCommand("ss")
                     .Description("Returns the current Starlight Stage tier borders.")
                     .Do(e =>
                     {
-                        return GetBorderSS(e, "");
+                        GetLastBorderTweet(e, deresute_border);
                     });
                 group.CreateCommand("sifen")
                     .Description("Returns the current School Idol Festival EN tier borders.")
                     .Do(e =>
                     {
-                        GetLastBorderTweet(e, "LLSIF EN Tracker Bot");
+                        GetLastBorderTweet(e, sifen_border);
                     });
                 group.CreateCommand("sifjp")
                     .Description("Returns the current School Idol Festival JP tier borders.")
                     .Do(e =>
                     {
-                        GetLastBorderTweet(e, "LLSIF JP Tracker Bot");
+                        GetLastBorderTweet(e, sifjp_border);
                     });
             });
             manager.CreateCommands("", group =>
@@ -88,66 +92,99 @@ namespace ChihiroBot.Modules.Border
                     .Description("Returns the current School Idol Festival EN tier borders.")
                     .Do(e =>
                     {
-                        //GetLastBorderTweet(e, "LLSIF EN Tracker Bot");
-                        GetLastBorderTweet(e, "sifen_trackbot");
+                        GetLastBorderTweet(e, sifen_border);
                     });
                 group.CreateCommand("ss")
                     .Description("Returns the current Starlight Stage tier borders.")
                     .Do(e =>
                     {
-                        return GetBorderSS(e, "");
+                        GetLastBorderTweet(e, deresute_border);
                     });
                 group.CreateCommand("sifjp")
                     .Description("Returns the current School Idol Festival JP tier borders.")
                     .Do(e =>
                     {
-                        //GetLastBorderTweet(e, "LLSIF JP Tracker Bot");
-                        GetLastBorderTweet(e, "sifjp_trackbot");
+                        GetLastBorderTweet(e, sifjp_border);
                     });
             });
         }
 
-        private async void GetLastBorderTweet(CommandEventArgs e, string account)
+        public async void GetLastBorderTweet(CommandEventArgs e, string account)
         {
-            //var accts = Search.SearchUsers("sifen_trackbot");
             var accts = Search.SearchUsers(account);
 
-            var acct = accts.First();
-
-            var lastTweets = acct.GetUserTimeline(20);
+            var lastTweets = accts.First().GetUserTimeline(10);
             var lastTweet = "";
-            foreach (var tweet in lastTweets)
+            if (String.Equals(account, sifen_border))
             {
-                if (tweet.Text.Contains("T1:") && tweet.Text.Contains("T2:"))
+                foreach (var tweet in lastTweets)
                 {
-                    lastTweet = tweet.ToString();
-                    break;
+                    if (tweet.Text.Contains("T1:") && (tweet.Text.Contains("Time:") || tweet.Text.Contains("[FINAL]")))
+                    {
+                        lastTweet = tweet.Text;
+                        break;
+                    }
                 }
+                await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifen")}\n{lastTweet}");
+                return;
+            }
+            else if (String.Equals(account, sifjp_border))
+            {
+                foreach (var tweet in lastTweets)
+                {
+                    if (tweet.Text.Contains("T1:") && (tweet.Text.Contains("Time:") || tweet.Text.Contains("[FINAL]")))
+                    {
+                        lastTweet = tweet.Text;
+                        break;
+                    }
+                }
+                await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifjp")}\n{lastTweet}");
+                return;
+
+            }
+            else if (String.Equals(account, deresute_border))
+            {
+                foreach (var tweet in lastTweets)
+                {
+                    if (tweet.Text.Contains("2千位：") && tweet.Text.Contains("1万位："))
+                    {
+                        lastTweet = tweet.Text;
+                        break;
+                    }
+                }
+                await e.Channel.SendMessage($"Remaining: {tm.GetStarlightTimeRemaining("event")}\n{lastTweet.Split('#')[0]}");
+                return;
             }
 
-            if (String.IsNullOrEmpty(lastTweet))
-            {
-                await e.Channel.SendMessage($"Couldn't find a prediction tweet (๑´╹‸╹`๑)");
-            }
-            else
-            {
-                if (String.Equals(account, "sifen_trackbot"))
-                {
-                    await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifen")}\n{lastTweet.ToString()}");
-                }
-                else if (String.Equals(account, "sifjp_trackbot"))
-                {
-                    await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifjp")}\n{lastTweet.ToString()}");
-                }
-                else
-                {
-                    await e.Channel.SendMessage($"Couldn't find a prediction tweet (๑´╹‸╹`๑)");
-                }
-            }
-
+            await e.Channel.SendMessage($"Couldn't use {account} to find a border.");
+            return;
         }
 
-        public async Task GetBorderSS(CommandEventArgs e, string target)
+        private void LoadKeys()
+        {
+            using (StreamReader r = new StreamReader(filePath2))
+            {
+                string json = r.ReadToEnd();
+                keys = JsonConvert.DeserializeObject<List<Keys>>(json);
+            }
+        }
+
+        #region Obsolete Methods
+        [Obsolete]
+        private string GetCSV(string url)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+            StreamReader sr = new StreamReader(resp.GetResponseStream());
+            string results = sr.ReadToEnd();
+            sr.Close();
+
+            return results;
+        }
+
+        [Obsolete]
+        public async void GetBorderSS(CommandEventArgs e, string target)
         {
             await e.Channel.SendIsTyping();
             csv = GetCSV(ssCsv);
@@ -164,27 +201,6 @@ namespace ChihiroBot.Modules.Border
 
             result = String.Format("Remaining: {12}\nLast Updated: {0} JST (+{11} min)\nT1: {1} (+{6})\nT2: {2} (+{7})\nT3: {3} (+{8})\nT4: {4} (+{9})\nT5: {5} (+{10})", args);
             await e.Channel.SendMessage($"{result}");
-        }
-
-        private void LoadKeys()
-        {
-            using (StreamReader r = new StreamReader(filePath2))
-            {
-                string json = r.ReadToEnd();
-                keys = JsonConvert.DeserializeObject<List<Keys>>(json);
-            }
-        }
-
-        private string GetCSV(string url)
-        {
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
-            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
-
-            StreamReader sr = new StreamReader(resp.GetResponseStream());
-            string results = sr.ReadToEnd();
-            sr.Close();
-
-            return results;
         }
 
         [Obsolete("The .csv are no longer maintained, use GetLastBorderTweet instead")]
@@ -238,6 +254,7 @@ namespace ChihiroBot.Modules.Border
             result = String.Format("Remaining: {12}\nLast Updated: {0} JST (+{11} min)\nT1: {1} (+{6})\nT2: {2} (+{7})\nT3: {3} (+{8})\nT4: {4} (+{9})", args);
             await e.Channel.SendMessage($"{result}");
         }
+        #endregion
 
         internal class Keys
         {
