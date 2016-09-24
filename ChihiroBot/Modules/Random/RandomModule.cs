@@ -5,15 +5,9 @@ using Discord.Modules;
 using ChihiroBot.Modules.Gif;
 using ChihiroBot.Modules.N_des;
 using ChihiroBot.Modules.StarlightStage;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace ChihiroBot.Modules.Random
 {
@@ -109,7 +103,7 @@ namespace ChihiroBot.Modules.Random
                        .Do(async e =>
                        {
                            await e.Channel.SendIsTyping();
-                           await e.Channel.SendMessage($"http://i.imgur.com/DUJ0IG5.png");
+                           await e.Channel.SendMessage($"http://i.imgur.com/wkst8sI.jpg");
                        });
                 group.CreateCommand("basic")
                        .Description("The most basic things around")

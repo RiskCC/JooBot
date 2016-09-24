@@ -12,7 +12,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
-using Discord.API.Client.Rest;
 
 namespace ChihiroBot.Modules.Twitch
 {
