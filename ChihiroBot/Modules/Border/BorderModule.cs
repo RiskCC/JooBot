@@ -8,9 +8,9 @@ using System.Net;
 using System.IO;
 using ChihiroBot.Modules.Timer;
 using Tweetinvi;
-using Tweetinvi.Core.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Tweetinvi.Models;
 
 namespace ChihiroBot.Modules.Border
 {
@@ -112,8 +112,21 @@ namespace ChihiroBot.Modules.Border
         public async void GetLastBorderTweet(CommandEventArgs e, string account)
         {
             var accts = Search.SearchUsers(account);
+            foreach (var acct in accts)
+            {
+                if (String.Equals(acct.ScreenName, account))
+                {
+                    ParseLastBorderTweets(e, account, await acct.GetUserTimelineAsync(20));
+                    return;
+                }
+            }
+            await e.Channel.SendIsTyping();
+            await e.Channel.SendMessage($"Couldn't use {account} to find a border.");
+            return;
+        }
 
-            var lastTweets = accts.First().GetUserTimeline(10);
+        private async void ParseLastBorderTweets(CommandEventArgs e, string account, IEnumerable<ITweet> lastTweets)
+        {
             var lastTweet = "";
             if (String.Equals(account, sifen_border))
             {
@@ -125,6 +138,7 @@ namespace ChihiroBot.Modules.Border
                         break;
                     }
                 }
+                await e.Channel.SendIsTyping();
                 await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifen")}\n{lastTweet}");
                 return;
             }
@@ -138,6 +152,7 @@ namespace ChihiroBot.Modules.Border
                         break;
                     }
                 }
+                await e.Channel.SendIsTyping();
                 await e.Channel.SendMessage($"Remaining: {tm.GetSIFTimeRemaining("sifjp")}\n{lastTweet}");
                 return;
 
@@ -152,12 +167,10 @@ namespace ChihiroBot.Modules.Border
                         break;
                     }
                 }
+                await e.Channel.SendIsTyping();
                 await e.Channel.SendMessage($"Remaining: {tm.GetStarlightTimeRemaining("event")}\n{lastTweet.Split('#')[0]}");
                 return;
             }
-
-            await e.Channel.SendMessage($"Couldn't use {account} to find a border.");
-            return;
         }
 
         private void LoadKeys()

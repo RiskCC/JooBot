@@ -12,7 +12,7 @@ namespace ChihiroBot
     public class HttpService : IService
     {
         private HttpClient _http;
-        private readonly string RemBotClientID = "a8w2l2eabjdpbb4hlp3n8grsbot8fzj";
+        //private readonly string RemBotClientID = "a8w2l2eabjdpbb4hlp3n8grsbot8fzj";
 
         void IService.Install(DiscordClient client)
         {

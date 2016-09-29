@@ -102,6 +102,7 @@ namespace ChihiroBot.Modules.StarlightStage
                        .Description("Alternate method to call timer ss")
                        .Do(async e =>
                        {
+                           await e.Channel.SendIsTyping();
                            await e.Channel.SendMessage($"Time remaining: {tm.GetStarlightTimeRemaining("event")}");
                        });
                 group.CreateCommand("prediction")

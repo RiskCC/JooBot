@@ -24,10 +24,10 @@ namespace ChihiroBot.Modules.Timer
         private Events eventsSS;
         private SIFCachedEvent sifenCached, sifjpCached;
         private SIFEvent sifenEvent, sifjpEvent;
+        private static DateTime noEvent = new DateTime(1993, 1, 26, 0, 0, 0, 0, System.DateTimeKind.Utc);
 
         private static string JST = "Tokyo Standard Time";
         private static string UTC = "UTC";
-        private static bool ssStale = true, sifStale = true;
 
         #region Obsolete Fields
         [Obsolete]
@@ -134,14 +134,21 @@ namespace ChihiroBot.Modules.Timer
         #endregion
 
         #region Starlight Stage Methods
-        private void UpdateStarlightTimers()
+        public void UpdateStarlightTimers()
         {
             try
             {
                 string json = GetJson(kiraraUrl);
                 var parsed = JsonConvert.DeserializeObject<SSTimer>(json);
-                gachasSS = JsonConvert.DeserializeObject<Gachas>(parsed.gachas[0].ToString());
-                eventsSS = JsonConvert.DeserializeObject<Events>(parsed.events[0].ToString());
+
+                if (!(parsed.gachas.Count == 0))
+                {
+                    gachasSS = JsonConvert.DeserializeObject<Gachas>(parsed.gachas[0].ToString());
+                }
+                if (!(parsed.events.Count == 0))
+                {
+                    eventsSS = JsonConvert.DeserializeObject<Events>(parsed.events[0].ToString());
+                }
             }
             catch (Exception ex)
             {
@@ -157,20 +164,29 @@ namespace ChihiroBot.Modules.Timer
         public string GetStarlightTimeRemaining(string query)
         {
             DateTime end;
-
-            if (ssStale)
-            {
-                UpdateStarlightTimers();
-                ssStale = false;
-            }
+            UpdateStarlightTimers();
 
             if (String.Equals(query, "event"))
             {
-                end = UnixToDateTime(eventsSS.end);
+                if(!(eventsSS == null))
+                {
+                    end = UnixToDateTime(eventsSS.end);
+                }
+                else
+                {
+                    end = noEvent;
+                }
             }
             else if (String.Equals(query, "gacha"))
             {
-                end = UnixToDateTime(gachasSS.end);
+                if (!(gachasSS == null))
+                {
+                    end = UnixToDateTime(gachasSS.end);
+                }
+                else
+                {
+                    end = noEvent;
+                }
             }
             else
             {
@@ -179,7 +195,6 @@ namespace ChihiroBot.Modules.Timer
 
             if (end < DateTime.Now)
             {
-                ssStale = true;
                 return "finished";
             }
             else
@@ -244,12 +259,7 @@ namespace ChihiroBot.Modules.Timer
         public string GetSIFTimeRemaining(string query)
         {
             DateTime end;
-                       
-            if (sifStale)
-            {
-                UpdateSIFCachedData();
-                sifStale = false;
-            }
+            UpdateSIFCachedData();
 
             if (String.Equals(query, "sifen"))
             {
@@ -266,7 +276,6 @@ namespace ChihiroBot.Modules.Timer
 
             if (end < DateTime.Now)
             {
-                sifStale = true;
                 return "finished";
             }
             else
