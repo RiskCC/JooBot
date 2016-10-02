@@ -165,6 +165,11 @@ namespace ChihiroBot
 
         private void OnLogMessage(object sender, LogMessageEventArgs e)
         {
+            if (e.Message.Contains("UserUpdated") && e.Severity == LogSeverity.Error)
+            {
+                return;
+            }
+
             //Color
             ConsoleColor color;
             switch (e.Severity)
