@@ -24,7 +24,7 @@ namespace ChihiroBot.Modules.Border
         private static string filePath2 = "./config/tweetinvi.json";
         public const string sifen_border = "sifen_trackbot";
         public const string sifjp_border = "sifjp_trackbot";
-        public const string deresute_border = "deresute_border";
+        public const string deresute_border = "deresuteborder0";
         private static string helpMessage = $"Usage: border <game>\nss - Starlight Stage\nsifen - School Idol Festival English\nsifjp - School Idol Festival Japanese";
 
         #region Obsolete Fields
@@ -164,11 +164,13 @@ namespace ChihiroBot.Modules.Border
                     if (tweet.Text.Contains("2千位：") && tweet.Text.Contains("1万位："))
                     {
                         lastTweet = tweet.Text;
+                        string[] separator = new string[] { "https://t.co/" };
+                        lastTweet = lastTweet.Split(separator, StringSplitOptions.None)[0];
                         break;
                     }
                 }
                 await e.Channel.SendIsTyping();
-                await e.Channel.SendMessage($"Remaining: {tm.GetStarlightTimeRemaining("event")}\n{lastTweet.Split('#')[0]}");
+                await e.Channel.SendMessage($"Remaining: {tm.GetStarlightTimeRemaining("event")}\n{lastTweet}");
                 return;
             }
         }

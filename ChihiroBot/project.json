@@ -20,10 +20,10 @@
 
   "dependencies": {
     "Discord.Net": "0.9.5",
-    "Discord.Net.Audio": "0.9.4",
+    "Discord.Net.Audio": "0.9.5",
     "Discord.Net.Commands": "0.9.5",
     "Discord.Net.Modules": "0.9.5",
-    "TweetinviAPI": "1.1.0"
+    "TweetinviAPI": "1.1.1"
   },
 
   "commands": {
