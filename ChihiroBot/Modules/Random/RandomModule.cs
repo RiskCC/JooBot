@@ -106,11 +106,54 @@ namespace ChihiroBot.Modules.Random
                            await e.Channel.SendMessage($"http://i.imgur.com/wkst8sI.jpg");
                        });
                 group.CreateCommand("basic")
-                       .Description("The most basic things around")
+                       .Description("Literally the most basic")
                        .Do(async e =>
                        {
                            await e.Channel.SendIsTyping();
-                           await e.Channel.SendMessage($"http://i.imgur.com/1XCRsrm.jpg");
+                           switch (x.Next(2))
+                           {
+                               case 0:
+                                   await e.Channel.SendMessage($"http://i.imgur.com/1XCRsrm.jpg");
+                                   break;
+                               case 1:
+                                   await e.Channel.SendMessage($"http://i.imgur.com/Kb1ZqNB.jpg");
+                                   break;
+                               default:
+                                   await e.Channel.SendMessage($"http://i.imgur.com/1XCRsrm.jpg");
+                                   break;
+                           }
+                       });
+                group.CreateCommand("nonbasic")
+                       .Description("Totes not basic")
+                       .Do(async e =>
+                       {
+                           await e.Channel.SendIsTyping();
+                           switch (x.Next(2))
+                           {
+                               case 0:
+                                   await e.Channel.SendMessage($"http://i.imgur.com/OFB8ymR.jpg");
+                                   break;
+                               case 1:
+                                   await e.Channel.SendMessage($"http://i.imgur.com/jpgYUeg.jpg");
+                                   break;
+                               default:
+                                   await e.Channel.SendMessage($"http://i.imgur.com/jpgYUeg.jpg");
+                                   break;
+                           }
+                       });
+                group.CreateCommand("how to roll")
+                       .Description("How to roll gacha")
+                       .Do(async e =>
+                       {
+                           await e.Channel.SendIsTyping();
+                           await e.Channel.SendMessage($"http://i.imgur.com/jWrJbuR.jpg");
+                       });
+                group.CreateCommand("gacha help")
+                       .Description("How to roll gacha")
+                       .Do(async e =>
+                       {
+                           await e.Channel.SendIsTyping();
+                           await e.Channel.SendMessage($"http://i.imgur.com/jWrJbuR.jpg");
                        });
                 group.CreateCommand("sleep")
                        .Parameter("Text", ParameterType.Optional)
