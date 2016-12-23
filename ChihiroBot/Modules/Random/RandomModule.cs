@@ -155,6 +155,13 @@ namespace ChihiroBot.Modules.Random
                            await e.Channel.SendIsTyping();
                            await e.Channel.SendMessage($"http://i.imgur.com/jWrJbuR.jpg");
                        });
+                group.CreateCommand("jail")
+                       .Description("She told me she was 18")
+                       .Do(async e =>
+                       {
+                           await e.Channel.SendIsTyping();
+                           await e.Channel.SendMessage($" http://i.imgur.com/6IWk1js.gif");
+                       });
                 group.CreateCommand("sleep")
                        .Parameter("Text", ParameterType.Optional)
                        .Description("Random 006 for sleep")
